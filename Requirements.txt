@@ -1,0 +1,18 @@
+alactritty
+qtile
+xorg
+dmenu
+firefox
+python-pip
+python
+picom
+nitrogen
+Some wallpapers
+geany
+
+
+pip:
+psutil 
+
+YAY:
+nerd-fonts-terminus 
