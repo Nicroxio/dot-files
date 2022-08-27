@@ -6,7 +6,6 @@ from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile import hook
 from libqtile.widget import Spacer
-from powerline.bindings.qtile.widget import PowerlineTextBox
 import os
 import subprocess
 
