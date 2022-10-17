@@ -9,7 +9,10 @@ picom
 nitrogen
 Some wallpapers
 geany
-
+alsa
+alsa-utils
+lightdm-gtk-greeter
+lightdm
 
 pip:
 psutil 
