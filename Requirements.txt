@@ -13,9 +13,15 @@ alsa
 alsa-utils
 lightdm-gtk-greeter
 lightdm
+nvim
+
+
+
 
 pip:
 psutil 
 
 YAY:
 nerd-fonts-terminus 
+nvchad
+
