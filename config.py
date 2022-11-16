@@ -12,6 +12,7 @@ import subprocess
 mod = "mod4"
 terminal = guess_terminal()
 #Startup script
+
 @hook.subscribe.startup_once
 def autostart():
     home = os.path.expanduser('~/.config/qtile/autostart.sh')
@@ -108,32 +109,64 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
-##BARCOLOURS##
-
-
-
+###TOP_BAR###
 screens = [
     Screen(
         top=bar.Bar(
+            
             [
-                widget.GroupBox(active='#ffffff',highlight_method='block',rounded=False,border='#ff0000'),
+
+                widget.GroupBox(active='#ffffff',
+                                highlight_method='block',
+                                rounded=False,
+                                border='#ff0000'),
                 widget.Prompt(),
                 widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
+               # widget.Chord(
+                #    chords_colors={
+                 #       "launch": ("#ff0000", "#ffffff"),
+                  #  },
+                   # name_transform=lambda name: name.upper(),
+                #),
                 widget.Systray(),
-                widget.TextBox(text=' ',fontsize=35, padding=-1,foreground='cc6666'),
-                widget.OpenWeather(location='Halifax,GB',foreground='#000000', background='#cc6666', padding=0),
-                widget.TextBox(text=' ',fontsize=35, padding=-1,foreground='#e6c547',background='#cc6666'),
-                widget.Battery(background='#e6c547',foreground='#000000',padding=5),
-                widget.TextBox(text=' ',fontsize=35, padding=-1,foreground='#b5bd68',background='#e6c547'),
-                widget.Memory(background='#b5bd68',foreground='#000000',padding=5),
-                widget.TextBox(text=' ',fontsize=35, padding=-1,foreground='#70c0ba',background='#b5bd68'),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p",timezone=None,background='#70c0ba',foreground='#000000',padding=5),
+                widget.TextBox(),
+                #widget.Image(filename="~/.config/qtile/icons/JetBrains_Logo_2016.svg",
+                #            mouse_callbacks={"Button1":lazy.spawn("jetbrains-toolbox")}),
+                widget.TextBox(text=' ',
+                               fontsize=35,
+                               padding=-1,
+                               foreground='cc6666'),
+                widget.OpenWeather(location='Halifax,GB',
+                                   foreground='#000000',
+                                   background='#cc6666',
+                                   padding=0),
+                widget.TextBox(text=' ',
+                               fontsize=35,
+                               padding=-1,
+                               foreground='#e6c547',
+                               background='#cc6666'),
+                widget.Battery(background='#e6c547',
+                               foreground='#000000',
+                               padding=5),
+                widget.TextBox(text=' ',
+                               fontsize=35,
+                               padding=-1,
+                               foreground='#b5bd68',
+                               background='#e6c547'),
+                widget.Memory(background='#b5bd68',
+                              foreground='#000000',
+                              padding=5,
+                              mouse_callbacks={"Button1":lazy.spawn("alacritty -e htop")}),
+                widget.TextBox(text=' ',
+                               fontsize=35,
+                               padding=-1,
+                               foreground='#70c0ba',
+                               background='#b5bd68'),
+                widget.Clock(format="%Y-%m-%d %a %I:%M %p",
+                             timezone=None,
+                             background='#70c0ba',
+                             foreground='#000000',
+                             padding=5),
             ],
             24,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
