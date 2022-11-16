@@ -8,13 +8,13 @@ python
 picom
 nitrogen
 Some wallpapers
-geany
 alsa
-alsa-utils
+pulseaudio
 lightdm-gtk-greeter
 lightdm
 nvim
-
+keepassxc
+thunar
 
 
 
@@ -24,4 +24,4 @@ psutil
 YAY:
 nerd-fonts-terminus 
 nvchad
-
+pacmixer
