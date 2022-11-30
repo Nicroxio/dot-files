@@ -15,7 +15,7 @@ lightdm
 nvim
 keepassxc
 thunar
-
+restic
 
 
 pip:
