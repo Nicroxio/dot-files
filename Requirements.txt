@@ -27,3 +27,4 @@ psutil
 YAY: 
 nvchad
 pacmixer
+shell-color-scripts
