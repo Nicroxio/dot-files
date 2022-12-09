@@ -16,12 +16,14 @@ nvim
 keepassxc
 thunar
 restic
+terminus-font-ttf 
+networkmanager
+flameshot
 
 
 pip:
 psutil 
 
-YAY:
-nerd-fonts-terminus 
+YAY: 
 nvchad
 pacmixer
