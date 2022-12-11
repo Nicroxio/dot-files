@@ -22,8 +22,9 @@ PS1='[\u@\h \W]\$'
 #aliases
 alias ls='ls --color=auto'
 alias la='ls -a --color=auto'
-alias lv='ls -lva --color=auto'
-
+alias lv='ls -lvah --color=auto'
+alias weth='curl wttr.in'
+alias shut='shutdown now'
 colorscript random
 
 eval "$(starship init bash)"
