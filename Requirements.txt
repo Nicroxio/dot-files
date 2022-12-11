@@ -10,7 +10,7 @@ nitrogen
 Some wallpapers
 alsa
 pulseaudio
-lightdm-gtk-greeter
+lightdm-slick-greeter
 lightdm
 nvim
 keepassxc
