@@ -19,7 +19,7 @@ restic
 terminus-font-ttf 
 networkmanager
 flameshot
-
+code
 
 pip:
 psutil 
