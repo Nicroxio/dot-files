@@ -13,7 +13,6 @@ source=("git+https://aur.archlinux.org/yay.git"
         "git+https://aur.archlinux.org/shell-color-scripts.git")
 sha256sums=("SKIP" "SKIP" "SKIP" "SKIP")
 
-
 build() {
   cd ${srcdir}/yay/
   makepkg -si
