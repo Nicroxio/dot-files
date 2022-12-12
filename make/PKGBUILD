@@ -8,7 +8,7 @@ url="https://github.com/nicroxio/dot-files"
 license=('GPL')
 depends=("alacritty" "qtile" "xorg" "dmenu" "firefox" "python-pip" "python" "picom" "nitrogen" "alsa" "pulseaudio" "lightdm-slick-greeter" "lightdm" "neovim" "keepassxc" "thunar" "restic" "ttf-terminus-nerd" "networkmanager" "flameshot" "code" "git" "python-psutil")
 source=("git+https://aur.archlinux.org/yay.git"
-        "git+https://aur.archlinux.org/nvchad.git"
+        "git+https://aur.archlinux.org/nvchad-git.git"
         "git+https://aur.archlinux.org/pacmixer.git"
         "git+https://aur.archlinux.org/shell-color-scripts.git")
 sha256sums=("SKIP" "SKIP" "SKIP" "SKIP")
