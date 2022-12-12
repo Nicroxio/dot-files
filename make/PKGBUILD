@@ -6,7 +6,7 @@ pkgdesc="Installs my .conf files and all deps required"
 arch=("x86_64")
 url="https://github.com/nicroxio/dot-files"
 license=('GPL')
-depends=("alacritty" "qtile""dmenu" "firefox" "python-pip", "python" "picom" "nitrogen" "pulseaudio" "lightdm-gtk-greeter" "lightdm-slick-greeter" "lightdm" "neovim" "keepassxc" "thunar" "restic" "ttf-terminus-nerd" "networkmanager" "flameshot" "code" "git" "python-psutil")
+depends=("alacritty" "qtile" "dmenu" "firefox" "python-pip" "python" "picom" "nitrogen" "pulseaudio" "lightdm-gtk-greeter" "lightdm-slick-greeter" "lightdm" "neovim" "keepassxc" "thunar" "restic" "ttf-terminus-nerd" "networkmanager" "flameshot" "code" "git" "python-psutil")
 makedepends=("git")
 source=("git+https://github.com/nicroxio/dot-files"
         "git+https://aur.archlinux.org/yay.git"
