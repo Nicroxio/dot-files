@@ -10,13 +10,14 @@ nitrogen
 Some wallpapers
 alsa
 pulseaudio
+lightdm-gtk-greeter
 lightdm-slick-greeter
 lightdm
 nvim
 keepassxc
 thunar
 restic
-terminus-font-ttf 
+ttf-terminus-nerd
 networkmanager
 flameshot
 code
