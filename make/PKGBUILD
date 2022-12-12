@@ -35,10 +35,10 @@ package() {
   chown ${USER} alacritty.yml
   chown ${USER} starship.toml
   chown -R ${USER} qtile
-  cp -f alacritty.yml ${pkgdir}/home/${USER}/.config/
-  cp -f starship.toml ${pkgdir}/home/${USER}/.config/
-  cp -rf qtile ${pkgdir}/home/${USER}/.config/
+  cp -f alacritty.yml /home/${USER}/.config/
+  cp -f starship.toml /home/${USER}/.config/
+  cp -rf qtile /home/${USER}/.config/
   cd ..
   chown ${USER} .bashrc
-  cp -f .bashrc ${pkgdir}/home/${USER}/
+  cp -f .bashrc /home/${USER}/
 }
