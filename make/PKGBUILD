@@ -6,7 +6,7 @@ pkgdesc="A quicker install of my dotfiles"
 arch=("x86_64")
 url="https://github.com/nicroxio/dot-files"
 license=('GPL')
-depends=("alacritty" "qtile" "xorg" "dmenu" "firefox" "python-pip" "python" "picom" "nitrogen" "alsa" "pulseaudio" "lightdm-slick-greeter" "lightdm" "neovim" "keepassxc" "thunar" "restic" "terminus-font-ttf" "networkmanager" "flameshot" "code" "git" "python-psutil")
+depends=("alacritty" "qtile" "xorg" "dmenu" "firefox" "python-pip" "python" "picom" "nitrogen" "alsa" "pulseaudio" "lightdm-slick-greeter" "lightdm" "neovim" "keepassxc" "thunar" "restic" "ttf-terminus-nerd" "networkmanager" "flameshot" "code" "git" "python-psutil")
 source=("git+https://aur.archlinux.org/yay.git"
         "git+https://aur.archlinux.org/nvchad.git"
         "git+https://aur.archlinux.org/pacmixer.git"
