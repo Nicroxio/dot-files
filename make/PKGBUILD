@@ -30,7 +30,7 @@ build() {
 
 
 package() {
-  mkdir -p ${pkgdir}/home/${USER}/.config/
+  mkdir -p /home/${USER}/.config/
   cd ${srcdir}/dot-files/config/
   chown ${USER} alacritty.yml
   chown ${USER} starship.toml
