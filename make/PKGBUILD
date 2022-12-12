@@ -1,0 +1,35 @@
+# Maintainer: nic <nic _at_ nicroxio dot co dot uk>
+pkgname=NicArch
+pkgver=1.0.0
+pkgrel=0
+pkgdesc="A quicker install of my dotfiles"
+arch=("x86_64")
+url="https://github.com/nicroxio/dot-files"
+license=('GPL')
+depends=("alacritty" "qtile" "xorg" "dmenu" "firefox" "python-pip" "python" "picom" "nitrogen" "alsa" "pulseaudio" "lightdm-slick-greeter" "lightdm" "neovim" "keepassxc" "thunar" "restic" "terminus-font-ttf" "networkmanager" "flameshot" "code" "git" "python-psutil")
+source=("git+https://aur.archlinux.org/yay.git"
+        "git+https://aur.archlinux.org/nvchad.git"
+        "git+https://aur.archlinux.org/pacmixer.git"
+        "git+https://aur.archlinux.org/shell-color-scripts.git")
+sha256sums=("SKIP" "SKIP" "SKIP" "SKIP")
+
+
+build() {
+  cd ${srcdir}/yay/
+  makepkg -si
+  cd ${srcdir}/nvchad
+  makepkg -si
+  cd ${srcdir}/pacmixer
+  makepkg -si
+  cd ${srcdir}/shell-color-scripts
+  makepkg -si
+}
+
+package() {
+  mkdir -p ${pkgdir}/home/${USER}/.config
+  cd ${srcdir}/..
+  cd config
+  cp -r qtile ${pkgdir}/home/${USER}/.config
+  cp alacritty.yml ${pkgdir}/home/${USER}/.config
+  cp starship.toml ${pkgdir}/home/${USER}/.config
+}
