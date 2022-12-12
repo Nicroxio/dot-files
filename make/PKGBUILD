@@ -1,12 +1,12 @@
 # Maintainer: Nicroxio <nic _at_ nicroxio dot co dot uk>
 pkgname=ArchNic
 pkgver=1.0.0
-pkgrel=0
+pkgrel=2
 pkgdesc="Installs my .conf files and all deps required"
 arch=("x86_64")
 url="https://github.com/nicroxio/dot-files"
 license=('GPL')
-depends=("alacritty" "qtile" "dmenu" "firefox" "python-pip" "python" "picom" "nitrogen" "pulseaudio" "lightdm-gtk-greeter" "lightdm-slick-greeter" "lightdm" "neovim" "keepassxc" "thunar" "restic" "ttf-terminus-nerd" "networkmanager" "flameshot" "code" "git" "python-psutil")
+depends=("alacritty" "qtile" "firefox" "python-pip" "python" "picom" "nitrogen" "pulseaudio" "lightdm-gtk-greeter" "lightdm-slick-greeter" "lightdm" "neovim" "keepassxc" "thunar" "restic" "ttf-terminus-nerd" "networkmanager" "flameshot" "code" "git" "python-psutil")
 makedepends=("git")
 source=("git+https://github.com/nicroxio/dot-files"
         "git+https://aur.archlinux.org/yay.git"
@@ -26,6 +26,8 @@ build() {
   cd ${srcdir}/shell-color-scripts
   makepkg -si 
   sudo pacman -Sy xorg alsa
+  cd ${srcdir}/dot-files/dmenu-5.2
+  sudo make install
 }
 
 
