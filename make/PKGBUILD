@@ -16,7 +16,7 @@ sha256sums=("SKIP" "SKIP" "SKIP" "SKIP")
 build() {
   cd ${srcdir}/yay/
   makepkg -si
-  cd ${srcdir}/nvchad
+  cd ${srcdir}/nvchad-git
   makepkg -si
   cd ${srcdir}/pacmixer
   makepkg -si
