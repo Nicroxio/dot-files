@@ -30,6 +30,7 @@ build() {
 
 
 package() {
+  curl -sS https://starship.rs/install.sh | sh
   mkdir -p /home/${USER}/.config/
   cd ${srcdir}/dot-files/config/
   chown ${USER} alacritty.yml
