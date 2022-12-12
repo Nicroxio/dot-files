@@ -34,10 +34,11 @@ package() {
   cd ${srcdir}/dot-files/config/
   chown ${USER} alacritty.yml
   chown ${USER} starship.toml
-  chown -R ${USER} qtile 
+  chown -R ${USER} qtile
   cp alacritty.yml ${pkgdir}/home/${USER}/.config/
   cp starship.toml ${pkgdir}/home/${USER}/.config/
   cp -rf qtile ${pkgdir}/home/${USER}/.config/
   cd ..
+  chown ${USER} .bashrc
   cp .bashrc ${pkgdir}/home/${USER}/
 }
