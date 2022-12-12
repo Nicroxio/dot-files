@@ -31,6 +31,6 @@ package() {
   cp -r qtile ${pkgdir}/home/${USER}/.config
   cp alacritty.yml ${pkgdir}/home/${USER}/.config
   cp starship.toml ${pkgdir}/home/${USER}/.config
-  cd ..
+  cd ../..
   cp .bashrc /home/${USER}/
 }
