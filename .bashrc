@@ -20,6 +20,7 @@
 PS1='[\u@\h \W]\$'
 
 #aliases
+alias ..='cd ..'
 alias ls='ls --color=auto'
 alias la='ls -a --color=auto'
 alias lv='ls -lvah --color=auto'
