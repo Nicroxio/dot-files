@@ -1,3 +1,4 @@
 git add *
 git commit -a
-git push
+git push lab master
+git push origin master
