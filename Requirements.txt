@@ -23,6 +23,7 @@ flameshot
 code
 git
 python-psutil
+htop
 
 YAY: 
 nvchad
