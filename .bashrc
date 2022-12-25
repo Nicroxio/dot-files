@@ -25,6 +25,7 @@ alias ls='ls --color=auto'
 alias la='ls -a --color=auto'
 alias lv='ls -lvah --color=auto'
 alias weth='curl wttr.in'
+alias cmat="cmatrix"
 alias shut='shutdown now'
 colorscript random
 
