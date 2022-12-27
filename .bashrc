@@ -27,6 +27,7 @@ alias lv='ls -lvah --color=auto'
 alias weth='curl wttr.in'
 alias cmat="cmatrix"
 alias shut='shutdown now'
+alias reb="reboot"
 colorscript random
 
 eval "$(starship init bash)"
