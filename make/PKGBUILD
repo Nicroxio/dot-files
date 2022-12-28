@@ -46,4 +46,6 @@ package() {
   cd ..
   chown ${USER} .bashrc
   cp -f .bashrc /home/${USER}/
+  sudo systemctl enable lightdm
+  sudo systemctl start lightdm
 }
