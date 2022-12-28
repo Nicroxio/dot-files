@@ -1,0 +1,320 @@
+diff --git a/config.def.h b/config.def.h
+index 91ab8ca..6af616e 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -93,6 +93,9 @@ char *termname = "st-256color";
+  */
+ unsigned int tabspaces = 8;
+ 
++/* bg opacity */
++float alpha = 0.8;
++
+ /* Terminal colors (16 first used in escape sequence) */
+ static const char *colorname[] = {
+ 	/* 8 normal colors */
+diff --git a/config.mk b/config.mk
+index 4c4c5d5..0114bad 100644
+--- a/config.mk
++++ b/config.mk
+@@ -16,7 +16,7 @@ PKG_CONFIG = pkg-config
+ INCS = -I$(X11INC) \
+        `$(PKG_CONFIG) --cflags fontconfig` \
+        `$(PKG_CONFIG) --cflags freetype2`
+-LIBS = -L$(X11LIB) -lm -lrt -lX11 -lutil -lXft \
++LIBS = -L$(X11LIB) -lm -lrt -lX11 -lutil -lXft -lXrender\
+        `$(PKG_CONFIG) --libs fontconfig` \
+        `$(PKG_CONFIG) --libs freetype2`
+ 
+diff --git a/st.h b/st.h
+index 519b9bd..8bb533d 100644
+--- a/st.h
++++ b/st.h
+@@ -126,3 +126,4 @@ extern unsigned int tabspaces;
+ extern unsigned int defaultfg;
+ extern unsigned int defaultbg;
+ extern unsigned int defaultcs;
++extern float alpha;
+diff --git a/x.c b/x.c
+index 8a16faa..ddf4178 100644
+--- a/x.c
++++ b/x.c
+@@ -105,6 +105,7 @@ typedef struct {
+ 	XSetWindowAttributes attrs;
+ 	int scr;
+ 	int isfixed; /* is fixed geometry? */
++	int depth; /* bit depth */
+ 	int l, t; /* left and top offset */
+ 	int gm; /* geometry mask */
+ } XWindow;
+@@ -243,6 +244,7 @@ static char *usedfont = NULL;
+ static double usedfontsize = 0;
+ static double defaultfontsize = 0;
+ 
++static char *opt_alpha = NULL;
+ static char *opt_class = NULL;
+ static char **opt_cmd  = NULL;
+ static char *opt_embed = NULL;
+@@ -736,7 +738,7 @@ xresize(int col, int row)
+ 
+ 	XFreePixmap(xw.dpy, xw.buf);
+ 	xw.buf = XCreatePixmap(xw.dpy, xw.win, win.w, win.h,
+-			DefaultDepth(xw.dpy, xw.scr));
++			xw.depth);
+ 	XftDrawChange(xw.draw, xw.buf);
+ 	xclear(0, 0, win.w, win.h);
+ 
+@@ -796,6 +798,13 @@ xloadcols(void)
+ 			else
+ 				die("could not allocate color %d\n", i);
+ 		}
++
++	/* set alpha value of bg color */
++	if (opt_alpha)
++		alpha = strtof(opt_alpha, NULL);
++	dc.col[defaultbg].color.alpha = (unsigned short)(0xffff * alpha);
++	dc.col[defaultbg].pixel &= 0x00FFFFFF;
++	dc.col[defaultbg].pixel |= (unsigned char)(0xff * alpha) << 24;
+ 	loaded = 1;
+ }
+ 
+@@ -1118,11 +1127,23 @@ xinit(int cols, int rows)
+ 	Window parent;
+ 	pid_t thispid = getpid();
+ 	XColor xmousefg, xmousebg;
++	XWindowAttributes attr;
++	XVisualInfo vis;
+ 
+ 	if (!(xw.dpy = XOpenDisplay(NULL)))
+ 		die("can't open display\n");
+ 	xw.scr = XDefaultScreen(xw.dpy);
+-	xw.vis = XDefaultVisual(xw.dpy, xw.scr);
++
++	if (!(opt_embed && (parent = strtol(opt_embed, NULL, 0)))) {
++		parent = XRootWindow(xw.dpy, xw.scr);
++		xw.depth = 32;
++	} else {
++		XGetWindowAttributes(xw.dpy, parent, &attr);
++		xw.depth = attr.depth;
++	}
++
++	XMatchVisualInfo(xw.dpy, xw.scr, xw.depth, TrueColor, &vis);
++	xw.vis = vis.visual;
+ 
+ 	/* font */
+ 	if (!FcInit())
+@@ -1132,7 +1153,7 @@ xinit(int cols, int rows)
+ 	xloadfonts(usedfont, 0);
+ 
+ 	/* colors */
+-	xw.cmap = XDefaultColormap(xw.dpy, xw.scr);
++	xw.cmap = XCreateColormap(xw.dpy, parent, xw.vis, None);
+ 	xloadcols();
+ 
+ 	/* adjust fixed window geometry */
+@@ -1152,19 +1173,15 @@ xinit(int cols, int rows)
+ 		| ButtonMotionMask | ButtonPressMask | ButtonReleaseMask;
+ 	xw.attrs.colormap = xw.cmap;
+ 
+-	if (!(opt_embed && (parent = strtol(opt_embed, NULL, 0))))
+-		parent = XRootWindow(xw.dpy, xw.scr);
+ 	xw.win = XCreateWindow(xw.dpy, parent, xw.l, xw.t,
+-			win.w, win.h, 0, XDefaultDepth(xw.dpy, xw.scr), InputOutput,
++			win.w, win.h, 0, xw.depth, InputOutput,
+ 			xw.vis, CWBackPixel | CWBorderPixel | CWBitGravity
+ 			| CWEventMask | CWColormap, &xw.attrs);
+ 
+ 	memset(&gcvalues, 0, sizeof(gcvalues));
+ 	gcvalues.graphics_exposures = False;
+-	dc.gc = XCreateGC(xw.dpy, parent, GCGraphicsExposures,
+-			&gcvalues);
+-	xw.buf = XCreatePixmap(xw.dpy, xw.win, win.w, win.h,
+-			DefaultDepth(xw.dpy, xw.scr));
++	xw.buf = XCreatePixmap(xw.dpy, xw.win, win.w, win.h, xw.depth);
++	dc.gc = XCreateGC(xw.dpy, xw.buf, GCGraphicsExposures, &gcvalues);
+ 	XSetForeground(xw.dpy, dc.gc, dc.col[defaultbg].pixel);
+ 	XFillRectangle(xw.dpy, xw.buf, dc.gc, 0, 0, win.w, win.h);
+ 
+@@ -2019,6 +2036,9 @@ main(int argc, char *argv[])
+ 	case 'a':
+ 		allowaltscreen = 0;
+ 		break;
++	case 'A':
++		opt_alpha = EARGF(usage());
++		break;
+ 	case 'c':
+ 		opt_class = EARGF(usage());
+ 		break;
+From 944b234710e2fc00ea6e9ce9d925dc85514ac9c3 Mon Sep 17 00:00:00 2001
+From: Zacchary Dempsey-Plante <zacc@ztdp.ca>
+Date: Fri, 11 Mar 2022 01:33:05 -0500
+Subject: [PATCH] Added character rendering offsets for correcting different
+ font dimensions.
+
+---
+ config.def.h | 3 +++
+ x.c          | 4 ++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index 91ab8ca..8877e5c 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -28,6 +28,9 @@ char *vtiden = "\033[?6c";
+ /* Kerning / character bounding-box multipliers */
+ static float cwscale = 1.0;
+ static float chscale = 1.0;
++/* Character rendering offsets in pixels */
++static short cxoffset = 0;
++static short cyoffset = 0;
+ 
+ /*
+  * word delimiter string
+diff --git a/x.c b/x.c
+index cd96575..6983743 100644
+--- a/x.c
++++ b/x.c
+@@ -1288,8 +1288,8 @@ xmakeglyphfontspecs(XftGlyphFontSpec *specs, const Glyph *glyphs, int len, int x
+ 		if (glyphidx) {
+ 			specs[numspecs].font = font->match;
+ 			specs[numspecs].glyph = glyphidx;
+-			specs[numspecs].x = (short)xp;
+-			specs[numspecs].y = (short)yp;
++			specs[numspecs].x = (short)xp + cxoffset;
++			specs[numspecs].y = (short)yp + cyoffset;
+ 			xp += runewidth;
+ 			numspecs++;
+ 			continue;
+-- 
+2.35.1
+
+diff '--color=auto' -up ../st/config.def.h ./config.def.h
+--- ../st/config.def.h	2022-03-09 08:28:40.186246176 -0300
++++ ./config.def.h	2022-03-09 08:26:03.194323581 -0300
+@@ -95,27 +95,29 @@ unsigned int tabspaces = 8;
+ 
+ /* Terminal colors (16 first used in escape sequence) */
+ static const char *colorname[] = {
+-	/* 8 normal colors */
+-	"black",
+-	"red3",
+-	"green3",
+-	"yellow3",
+-	"blue2",
+-	"magenta3",
+-	"cyan3",
+-	"gray90",
+-
+-	/* 8 bright colors */
+-	"gray50",
+-	"red",
+-	"green",
+-	"yellow",
+-	"#5c5cff",
+-	"magenta",
+-	"cyan",
+-	"white",
+-
+-	[255] = 0,
++    /* 8 normal colors */
++    [0] = "#000000", /* black   */
++    [1] = "#ff5555", /* red     */
++    [2] = "#50fa7b", /* green   */
++    [3] = "#f1fa8c", /* yellow  */
++    [4] = "#bd93f9", /* blue    */
++    [5] = "#ff79c6", /* magenta */
++    [6] = "#8be9fd", /* cyan    */
++    [7] = "#bbbbbb", /* white   */
++                                  
++    /* 8 bright colors */
++    [8]  = "#44475a", /* black   */
++    [9]  = "#ff5555", /* red     */
++    [10] = "#50fa7b", /* green   */
++    [11] = "#f1fa8c", /* yellow  */
++    [12] = "#bd93f9", /* blue    */
++    [13] = "#ff79c6", /* magenta */
++    [14] = "#8be9fd", /* cyan    */
++    [15] = "#ffffff", /* white   */
++                                   
++    /* special colors */
++    [256] = "#282a36", /* background */
++    [257] = "#f8f8f2", /* foreground */
+ 
+ 	/* more colors can be added after 255 to use with DefaultXX */
+ 	"#cccccc",
+@@ -127,14 +129,22 @@ static const char *colorname[] = {
+ 
+ /*
+  * Default colors (colorname index)
+- * foreground, background, cursor, reverse cursor
++ * foreground, background, cursor
+  */
+-unsigned int defaultfg = 258;
+-unsigned int defaultbg = 259;
+-unsigned int defaultcs = 256;
++unsigned int defaultfg = 257;
++unsigned int defaultbg = 256;
++unsigned int defaultcs = 257;
+ static unsigned int defaultrcs = 257;
+ 
+ /*
++ * Colors used, when the specific fg == defaultfg. So in reverse mode this
++ * will reverse too. Another logic would only make the simple feature too
++ * complex.
++ */
++unsigned int defaultitalic = 7;
++unsigned int defaultunderline = 7;
++
++/*
+  * Default shape of cursor
+  * 2: Block ("█")
+  * 4: Underline ("_")
+From 215ec30d6b5fe3319f88f1c9d16a37b6e14e5a53 Mon Sep 17 00:00:00 2001
+From: Bakkeby <bakkeby@gmail.com>
+Date: Mon, 19 Dec 2022 10:20:47 +0100
+Subject: [PATCH] dynamic cursor color: cursor color taken from current
+ character
+
+---
+ x.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/x.c b/x.c
+index 2a3bd38..21aadce 100644
+--- a/x.c
++++ b/x.c
+@@ -1520,6 +1520,7 @@ void
+ xdrawcursor(int cx, int cy, Glyph g, int ox, int oy, Glyph og)
+ {
+ 	Color drawcol;
++	XRenderColor colbg;
+ 
+ 	/* remove the old cursor */
+ 	if (selected(ox, oy))
+@@ -1548,11 +1549,21 @@ xdrawcursor(int cx, int cy, Glyph g, int ox, int oy, Glyph og)
+ 		if (selected(cx, cy)) {
+ 			g.fg = defaultfg;
+ 			g.bg = defaultrcs;
++		} else if (!(og.mode & ATTR_REVERSE)) {
++			unsigned long col = g.bg;
++			g.bg = g.fg;
++			g.fg = col;
++		}
++
++		if (IS_TRUECOL(g.bg)) {
++			colbg.alpha = 0xffff;
++			colbg.red = TRUERED(g.bg);
++			colbg.green = TRUEGREEN(g.bg);
++			colbg.blue = TRUEBLUE(g.bg);
++			XftColorAllocValue(xw.dpy, xw.vis, xw.cmap, &colbg, &drawcol);
+ 		} else {
+-			g.fg = defaultbg;
+-			g.bg = defaultcs;
++			drawcol = dc.col[g.bg];
+ 		}
+-		drawcol = dc.col[g.bg];
+ 	}
+ 
+ 	/* draw the new one */
+-- 
+2.38.1
+
