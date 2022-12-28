@@ -27,7 +27,9 @@ build() {
   makepkg -si 
   sudo pacman -Sy xorg alsa
   cd ${srcdir}/dot-files/dmenu-5.2
-  sudo make install
+  sudo make clean install
+  cd ${srcdir}/dot-files/st-0.9
+  sudo make clean install
 }
 
 
