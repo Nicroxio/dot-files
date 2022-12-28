@@ -35,5 +35,5 @@ eval "$(starship init bash)"
 #Manualy installed Applications
 export PATH="$PATH:/usr/local/bin/"
 export EDITOR="nvim"
-export TERMINAL="st"
+export TERMINAL="alacritty"
 export BROWSER="firefox"

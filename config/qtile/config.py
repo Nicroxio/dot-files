@@ -8,7 +8,7 @@ import os
 import subprocess
 
 mod = "mod4"
-terminal = "st"
+terminal = "alacritty"
 #Startup script
 
 @hook.subscribe.startup_once
