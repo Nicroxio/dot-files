@@ -11,9 +11,9 @@ makedepends=("git")
 source=("git+https://github.com/nicroxio/dot-files"
         "git+https://aur.archlinux.org/yay.git"
         "git+https://aur.archlinux.org/pacmixer.git"
-        "git+https://aur.archlinux.org/nvchad-git.git"
+        #"git+https://aur.archlinux.org/nvchad-git.git"
         "git+https://aur.archlinux.org/shell-color-scripts.git")
-sha256sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP")
+sha256sums=("SKIP" "SKIP" "SKIP" "SKIP")
 
 
 build() {
@@ -21,8 +21,8 @@ build() {
   makepkg -si
   cd ${srcdir}/pacmixer
   makepkg -si
-  cd ${srcdir}/nvchad-git
-  makepkg -si
+  #cd ${srcdir}/nvchad-git
+  #makepkg -si
   cd ${srcdir}/shell-color-scripts
   makepkg -si 
   sudo pacman -Sy xorg alsa
