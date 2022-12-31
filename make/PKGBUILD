@@ -21,8 +21,6 @@ build() {
   makepkg -si
   cd ${srcdir}/pacmixer
   makepkg -si
-  #cd ${srcdir}/nvchad-git
-  #makepkg -si
   cd ${srcdir}/shell-color-scripts
   makepkg -si 
   sudo pacman -Sy xorg alsa
