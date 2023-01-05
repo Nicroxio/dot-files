@@ -28,6 +28,7 @@ alias weth='curl wttr.in'
 alias cmat="cmatrix"
 alias shut='shutdown now'
 alias reb="reboot"
+alias graph="DRI_PRIME=1"
 colorscript random
 
 eval "$(starship init bash)"
